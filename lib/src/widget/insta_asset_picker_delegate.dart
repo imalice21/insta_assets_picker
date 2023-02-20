@@ -38,9 +38,12 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     this.title,
     this.closeOnComplete = false,
     this.isSquareDefaultCrop = true,
+    this.customSpecialItemPosition,
+    this.customSpecialItemBuilder,
   }) : super(
           shouldRevertGrid: false,
-          specialItemPosition: SpecialItemPosition.none,
+          specialItemPosition: customSpecialItemPosition ?? SpecialItemPosition.none,
+          specialItemBuilder: customSpecialItemBuilder,
         );
 
   final String? title;
@@ -53,6 +56,9 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   final bool closeOnComplete;
 
   final bool isSquareDefaultCrop;
+
+  SpecialItemPosition? customSpecialItemPosition;
+  Widget? Function(BuildContext, AssetPathEntity?, int)? customSpecialItemBuilder;
 
   // LOCAL PARAMETERS
 

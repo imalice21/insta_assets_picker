@@ -238,6 +238,8 @@ class InstaAssetPicker {
     bool sortPathsByModifiedDate = false,
     FilterOptionGroup? filterOptions,
     Duration initializeDelayDuration = _kInitializeDelayDuration,
+    SpecialItemPosition customSpecialItemPosition = SpecialItemPosition.none,
+    Widget? Function(BuildContext, AssetPathEntity?, int)? customSpecialItemBuilder,
   }) async {
     final DefaultAssetPickerProvider provider = DefaultAssetPickerProvider(
       selectedAssets: selectedAssets,
@@ -274,6 +276,8 @@ class InstaAssetPicker {
       closeOnComplete: closeOnComplete,
       isSquareDefaultCrop: isSquareDefaultCrop,
       onCompleted: onCompleted,
+      customSpecialItemPosition: customSpecialItemPosition,
+      customSpecialItemBuilder: customSpecialItemBuilder,
     );
 
     return AssetPicker.pickAssetsWithDelegate(
