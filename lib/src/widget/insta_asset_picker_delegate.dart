@@ -22,7 +22,7 @@ const _kExtendedCropViewPosition = 0.0;
 const _kScrollMultiplier = 1.5;
 
 const _kIndicatorSize = 20.0;
-const _kPathSelectorRowHeight = 50.0;
+const _kPathSelectorRowHeight = 0.0;
 
 class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   InstaAssetPickerBuilder({
@@ -328,20 +328,12 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
         builder: (_, DefaultAssetPickerProvider p, __) {
           return TextButton(
             style: TextButton.styleFrom(
-              foregroundColor:
-                  p.isSelectedNotEmpty ? themeColor : theme.dividerColor,
+              foregroundColor: themeColor
             ),
             onPressed: isLoaded && p.isSelectedNotEmpty
                 ? () => onConfirm(context)
-                : null,
-            child: isLoaded
-                ? Text(
-                    p.isSelectedNotEmpty && !isSingleAssetMode
-                        ? '${textDelegate.confirm}'
-                            ' (${p.selectedAssets.length}/${p.maxAssets})'
-                        : textDelegate.confirm,
-                  )
-                : _buildLoader(context, 10),
+                : () => null,
+            child: Text(textDelegate.confirm)
           );
         },
       ),
@@ -435,7 +427,15 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                                 style: theme.appBarTheme.titleTextStyle,
                               )
                             : null,
-                        leading: backButton(context),
+                        leading: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: IconButton(
+                            onPressed: Navigator.of(context).maybePop,
+                            tooltip: MaterialLocalizations.of(context)
+                                .backButtonTooltip,
+                            icon: const Icon(Icons.arrow_back, color: Colors.black),
+                          ),
+                        ),
                         actions: <Widget>[confirmButton(context)],
                       ),
                       body: DecoratedBox(
@@ -471,25 +471,6 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                                   ),
                                 ),
                                 theme: pickerTheme,
-                              ),
-                            ),
-                            SizedBox(
-                              height: _kPathSelectorRowHeight,
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  pathEntitySelector(context),
-                                  CircleIconButton(
-                                    onTap: unSelectAll,
-                                    theme: pickerTheme,
-                                    icon: const Icon(
-                                      Icons.layers_clear_sharp,
-                                      size: 18,
-                                    ),
-                                  ),
-                                ],
                               ),
                             ),
                           ],
