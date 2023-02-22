@@ -241,6 +241,18 @@ class InstaAssetPicker {
     SpecialItemPosition customSpecialItemPosition = SpecialItemPosition.none,
     Widget? Function(BuildContext, AssetPathEntity?, int)? customSpecialItemBuilder,
   }) async {
+    final locale = Localizations.maybeLocaleOf(context);
+    final text = textDelegate ?? assetPickerTextDelegateFromLocale(locale);
+
+    // must be called before initializing any picker provider to avoid `PlatformException(PERMISSION_REQUESTING)` type exception
+    PermissionState? ps;
+    try {
+      ps = await _permissionCheck();
+    } catch (e) {
+      _openErrorPermission(context, text, onPermissionDenied);
+      return [];
+    }
+
     final DefaultAssetPickerProvider provider = DefaultAssetPickerProvider(
       selectedAssets: selectedAssets,
       maxAssets: maxAssets,
@@ -253,18 +265,8 @@ class InstaAssetPicker {
       initializeDelayDuration: initializeDelayDuration,
     );
 
-    final locale = Localizations.maybeLocaleOf(context);
-    final text = textDelegate ?? assetPickerTextDelegateFromLocale(locale);
-
-    PermissionState? ps;
-    try {
-      ps = await _permissionCheck();
-    } catch (e) {
-      _openErrorPermission(context, text, onPermissionDenied);
-    }
-
     final InstaAssetPickerBuilder builder = InstaAssetPickerBuilder(
-      initialPermission: ps ?? PermissionState.denied,
+      initialPermission: ps,
       provider: provider,
       title: title,
       gridCount: gridCount,
