@@ -238,6 +238,7 @@ class InstaAssetPicker {
     bool sortPathsByModifiedDate = false,
     FilterOptionGroup? filterOptions,
     Duration initializeDelayDuration = _kInitializeDelayDuration,
+    bool permitEmptySelect = false,
     SpecialItemPosition customSpecialItemPosition = SpecialItemPosition.none,
     Widget? Function(BuildContext, AssetPathEntity?, int)? customSpecialItemBuilder,
   }) async {
@@ -278,6 +279,7 @@ class InstaAssetPicker {
       closeOnComplete: closeOnComplete,
       isSquareDefaultCrop: isSquareDefaultCrop,
       onCompleted: onCompleted,
+      permitEmptySelect: permitEmptySelect,
       customSpecialItemPosition: customSpecialItemPosition,
       customSpecialItemBuilder: customSpecialItemBuilder,
     );
