@@ -38,6 +38,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     this.title,
     this.closeOnComplete = false,
     this.isSquareDefaultCrop = true,
+    this.permitEmptySelect = false,
     this.customSpecialItemPosition,
     this.customSpecialItemBuilder,
   }) : super(
@@ -56,6 +57,8 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   final bool closeOnComplete;
 
   final bool isSquareDefaultCrop;
+
+  final bool permitEmptySelect;
 
   SpecialItemPosition? customSpecialItemPosition;
   Widget? Function(BuildContext, AssetPathEntity?, int)? customSpecialItemBuilder;
@@ -90,8 +93,13 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     if (closeOnComplete) {
       Navigator.of(context).maybePop(provider.selectedAssets);
     }
-    _cropViewerKey.currentState?.saveCurrentCropChanges();
-    onCompleted(_cropController.exportCropFiles(provider.selectedAssets));
+
+    if(provider.selectedAssets.isEmpty) {
+      onCompleted(_cropController.exportCropFiles([]));
+    } else {
+      _cropViewerKey.currentState?.saveCurrentCropChanges();
+      onCompleted(_cropController.exportCropFiles(provider.selectedAssets));
+    }
   }
 
   /// The responsive height of the crop view
@@ -336,7 +344,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
             style: TextButton.styleFrom(
               foregroundColor: themeColor
             ),
-            onPressed: isLoaded && p.isSelectedNotEmpty
+            onPressed: isLoaded && (permitEmptySelect || p.isSelectedNotEmpty)
                 ? () => onConfirm(context)
                 : () => null,
             child: Text(textDelegate.confirm)
